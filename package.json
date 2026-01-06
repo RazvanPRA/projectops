@@ -1,0 +1,30 @@
+{
+  "name": "projectops",
+  "private": true,
+  "version": "0.0.1",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -k \"npm -w apps/api run start:dev\" \"npm -w apps/web run dev\"",
+    "build": "npm -ws run build --if-present",
+    "lint": "npm -ws run lint --if-present",
+    "typecheck": "npm -ws run typecheck --if-present",
+    "test": "npm -ws run test --if-present",
+    "format": "prettier . --write"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.51.0",
+    "@typescript-eslint/parser": "^8.51.0",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "prettier": "^3.7.4",
+    "typescript": "^5.9.3"
+  }
+}
