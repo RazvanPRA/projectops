@@ -1,0 +1,45 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  admin
+  viewer
+}
+
+enum ProjectStatus {
+  active
+  paused
+  completed
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  passwordHash  String
+  role Role @default(viewer)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  projectsOwned Project[] @relation("ProjectsOwned")  
+}
+
+model Project {
+  id            String  @id @default(cuid())
+  name          String 
+  status        ProjectStatus @default(active)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  ownerId       String
+  owner         User          @relation("ProjectsOwned", fields: [ownerId], references: [id], onDelete: Restrict)
+
+  @@index([status])
+  @@index([createdAt])
+}
