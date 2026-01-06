@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16
+    container_name: projectops-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: projectops
+      POSTGRES_PASSWORD: projectops
+      POSTGRES_DB: projectops
+    volumes:
+      - projectops_pgdata:/var/lib/postgresql/data
+
+volumes:
+  projectops_pgdata:
