@@ -1,16 +1,21 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import type { HealthResponse } from '@projectops/shared';
+import { PrismaService } from './prisma/prisma.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
-  @Get('health')
-  health(): HealthResponse {
-    return { status: 'ok' };
-  }
+  constructor(
+    private readonly appService: AppService,
+    private readonly prisma: PrismaService,
+  ) {}
   @Get()
   getHello(): string {
     return this.appService.getHello();
+  }
+
+  @Get('health/db')
+  async healthDb() {
+    await this.prisma.user.findFirst();
+    return { status: 'ok' };
   }
 }
