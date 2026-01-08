@@ -19,27 +19,60 @@ enum ProjectStatus {
   completed
 }
 
+enum ProjectRole {
+  owner
+  admin
+  member
+  viewer
+}
+
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  name          String
-  passwordHash  String
-  role Role @default(viewer)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  projectsOwned Project[] @relation("ProjectsOwned")  
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         Role     @default(viewer)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Canonical ownership (1:N)
+  projectsOwned Project[] @relation("ProjectsOwned")
+
+  // Memberships (N:M via join table)
+  memberships   ProjectMember[]
 }
 
 model Project {
-  id            String  @id @default(cuid())
-  name          String 
-  status        ProjectStatus @default(active)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id        String        @id @default(cuid())
+  name      String
+  status    ProjectStatus @default(active)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 
-  ownerId       String
-  owner         User          @relation("ProjectsOwned", fields: [ownerId], references: [id], onDelete: Restrict)
+  // Canonical owner
+  ownerId String
+  owner   User @relation("ProjectsOwned", fields: [ownerId], references: [id], onDelete: Restrict)
+
+  // Memberships (N:M via join table)
+  members ProjectMember[]
 
   @@index([status])
   @@index([createdAt])
+}
+
+model ProjectMember {
+  projectId String
+  userId    String
+  role      ProjectRole @default(member)
+  createdAt DateTime    @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Ensure a user can appear only once per project
+  @@id([projectId, userId])
+
+  // Useful indexes for common access patterns
+  @@index([userId, createdAt])
+  @@index([projectId, role])
 }
