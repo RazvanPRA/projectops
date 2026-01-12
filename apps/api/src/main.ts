@@ -18,17 +18,32 @@ async function bootstrap() {
   if (process.env.NODE_ENV !== 'production') {
     const config = new DocumentBuilder()
       .setTitle('ProjectOps API')
-      .setDescription('API documentation for ProjectOps')
-      .setVersion('1.0')
-      .addBearerAuth()
+      .setDescription('Backend API (NestJS + Prisma + Postgres)')
+      .setVersion('1.0.0')
+      .addBearerAuth(
+        { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+        'access-token',
+      )
       .build();
 
-    const document = SwaggerModule.createDocument(app, config);
+    const document = SwaggerModule.createDocument(app, config, {
+      deepScanRoutes: true,
+    });
 
     SwaggerModule.setup('docs', app, document, {
+      customSiteTitle: 'ProjectOps API Docs',
       swaggerOptions: {
         persistAuthorization: true,
+        displayRequestDuration: true,
+        filter: true,
+        tagsSorter: 'alpha',
+        operationsSorter: 'alpha',
+        docExpansion: 'none',
       },
+      customCss: `
+      .swagger-ui .topbar { display: none; }
+      .swagger-ui .info .title { font-size: 28px; }
+    `,
     });
   }
 
