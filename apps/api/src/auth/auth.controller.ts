@@ -30,7 +30,7 @@ export class AuthController {
   constructor(private readonly auth: AuthService) {}
 
   @Post('login')
-  @HttpCode(200) // dacă vrei 201 ca în screenshot, elimină linia asta
+  @HttpCode(200)
   @ApiOperation({ summary: 'Logs in a user.' })
   @ApiBody({
     type: LoginDto,
