@@ -1,3 +1,48 @@
+# ProjectOps API
+
+## Local setup (Windows/macOS/Linux)
+
+1) From repo root install deps:
+
+```bash
+npm install
+```
+
+2) Create env file:
+
+```bash
+copy .\apps\api\.env.example .\apps\api\.env
+```
+
+3) Start Postgres (Docker):
+
+```bash
+npm run db:up
+```
+
+4) Generate Prisma client + apply migrations:
+
+```bash
+npm -w apps/api run prisma:generate
+npm -w apps/api run prisma:deploy
+```
+
+5) (Optional) Seed data:
+
+```bash
+npm -w apps/api run prisma:seed
+```
+
+6) Run API:
+
+```bash
+npm -w apps/api run start:dev
+```
+
+Swagger (dev): http://localhost:3000/docs
+
+---
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>

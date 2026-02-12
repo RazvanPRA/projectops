@@ -7,6 +7,8 @@
     "packages/*"
   ],
   "scripts": {
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
     "dev": "concurrently -k \"npm -w apps/api run start:dev\" \"npm -w apps/web run dev\"",
     "build": "npm -ws run build --if-present",
     "lint": "npm -ws run lint --if-present",
